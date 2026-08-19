@@ -1,0 +1,140 @@
+FIRSTTVHD
+URL: https://cdn2.titantv.com/lzyi-C2SIZqgHN0u40UXHUl4IadPSpk6MFZGBpWVHx0.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAFZChS6UdUN62G6Yga6kE6DNn0uLSH5Ytg.png
+ERROR: HTTP 500
+
+FIRSTTVHD
+URL: https://cdn2.titantv.com/kicUJIzA_8lpQtQbw-N6pYcAkrd2RI92YUhGA5pK6Yk.png
+ERROR: HTTP 500
+
+CHEDDAR
+URL: https://cdn2.titantv.com/y-hjEBDBIMTeiOaB0byh2lB_t4kodsWVOjZkeA8TVgo.png
+ERROR: HTTP 500
+
+QVC
+URL: https://cdn2.titantv.com/WU9w2NLws1OzxV2Io2oWfnH7MOVLjOYysngdp11f1V4.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAE2oJI4tJr5KnaCKadVSKdDTjN2ViH33eo.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAHi0cwCOrs5gYh6DiUAPhbRwFnTYReG-DA.png
+ERROR: HTTP 500
+
+FOODHD
+URL: https://cdn2.titantv.com/GGCwhcH4SXxb0nGRWV30t_tj2WxRbpTTY0lkRq_Sb0Y.png
+ERROR: HTTP 500
+
+HGTVHD
+URL: https://cdn2.titantv.com/GGCwhcH4SXwvvHDlFZIHzWZgKOrSN8jMhA-zxKT1MWg.png
+ERROR: HTTP 500
+
+FIRSTTVHD
+URL: https://cdn2.titantv.com/kicUJIzA_8kVKNuiErOKu99QR6qaOpdAXgfJqXx1eik.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAE6EonVuzRrYJDOxE9ME6q6qVZXh-Uo_Og.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAFCG9_B7oyeOlsGdAnpclNif_efX5eqPA0.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAGYkuHT_MKb9it7w8yLdaWsK4Oq_AoAU3k.png
+ERROR: HTTP 500
+
+QVC
+URL: https://cdn2.titantv.com/WU9w2NLws1MBd3RCrhFZ2B6wj_LKqlb2PkH1qZWE8Sk.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAFKLFHssxF1ttwT_mZ7QxxRQrSlDLZCGTM.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAEfir9IIw3rZM8tZW9lQrg_ypfEQcKfxTw.png
+ERROR: HTTP 500
+
+QVC
+URL: https://cdn2.titantv.com/D-Et7DYrwHfcnpPIIG0M5pObdWMKcElUswfNdI1UeZQ.png
+ERROR: HTTP 500
+
+FIRSTTVHD
+URL: https://cdn2.titantv.com/kicUJIzA_8kVKNuiErOKu-otOlBG5wsgJUf2M2QpTkM.png
+ERROR: HTTP 500
+
+LAW-CRIME
+URL: https://cdn2.titantv.com/y-hjEBDBIMSYwtLlDPJLyhu5wa1zcI3Xjj2jwQczRpM.png
+ERROR: HTTP 500
+
+QVC
+URL: https://cdn2.titantv.com/D-Et7DYrwHfr51YsNxQb7reGjAqxbKp5cXjbV8sgq-s.png
+ERROR: HTTP 500
+
+CNBCWRLDHD
+URL: https://cdn2.titantv.com/Ej420JnUsYDhu-8J70kM5XHFazSotvht72v1bSS0qNs.png
+ERROR: HTTP 500
+
+LMN-E
+URL: https://cdn2.titantv.com/1KVBS0QXDB8EEn7ftR-g9NqMCP7UPs3b60gnVySsJeo.png
+ERROR: HTTP 500
+
+ASPIRE
+URL: https://cdn2.titantv.com/skZA6eGUwZCkzfQdsOVMmJEiMwTnOfPs8aw1inkQt1M.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAFXmBfWwCRS8egCcEskYcVj2PUtIkkIXu4.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAEenPxXO3wApcsgCklNkjwvBgYEwGTWJnw.png
+ERROR: HTTP 500
+
+COZITVE
+URL: https://cdn2.titantv.com/rGzM84l9eoO78jOtUZtGgEdjBz68HgRlerroJUlNloY.png
+ERROR: HTTP 500
+
+A-E
+URL: https://cdn2.titantv.com/GGCwhcH4SXwV44rqBkLOO-lWeqSXEPzFEhhTwps6yjs.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAFnFArYNVxzDuA9P7dBq9ots-p0vCpZFo8.png
+ERROR: HTTP 500
+
+CHEDDAR
+URL: https://cdn2.titantv.com/y-hjEBDBIMTeiOaB0byh2uxNjqK6DYxsnMRfXyma_FM.png
+ERROR: HTTP 500
+
+INSPHD
+URL: https://cdn2.titantv.com/xWiDBiXc-ho0uSElyUcaLK2QMWskoif-8Pz5KzqiSec.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAEqiW7Ze0XsQgT4o-yyA-3cZD26n4MRYgw.png
+ERROR: HTTP 500
+
+FIRSTTVHD
+URL: https://cdn2.titantv.com/kicUJIzA_8lpQtQbw-N6pZh7UA0kfd2KX16vbRVCe8I.png
+ERROR: HTTP 500
+
+GOLFHD
+URL: https://cdn2.titantv.com/9Ak5SsxptlvuZF0StcsnVf477ALT0D7V3hCqV3Z3G04.png
+ERROR: HTTP 500
+
+Grit
+URL: https://cdn2.titantv.com/skZA6eGUwZDyt5coG2j-N5kbOHcOmmAu5h0b-wltkMo.png
+ERROR: HTTP 500
+
+HSN
+URL: https://cdn2.titantv.com/5TtfO-cGJAHi0cwCOrs5gQen0_SWIZYNM_X4aFQVSvE.png
+ERROR: HTTP 500
+

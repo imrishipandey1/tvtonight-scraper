@@ -1,0 +1,71 @@
+name: Scrape and Deploy
+
+on:
+  # Schedule: 12:30 AM Eastern Time (USA)
+  # Eastern Standard Time (EST) is UTC-5, so 12:30 AM EST = 5:30 AM UTC.
+  # Note: During Daylight Saving Time (EDT, UTC-4), this runs at 1:30 AM EDT.
+  schedule:
+    - cron: '30 5 * * *'
+  
+  # Manual trigger option
+  workflow_dispatch:
+
+jobs:
+  scrape_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install Pillow
+
+      # STEP 1: Run the Scraper Script
+      - name: Run TitanTV Scraper
+        run: python3 titantv_scraper.py
+        # If you need to hide your USER_ID, you can use GitHub Secrets:
+        # env:
+        #   USER_ID: ${{ secrets.TITANTV_USER_ID }}
+
+      # STEP 2: Run the Logo Downloader
+      - name: Run Logo Downloader
+        run: python3 logo_downloader.py
+
+      # STEP 3: Compress outputs into tar.gz format
+      - name: Compress Outputs
+        run: |
+          tar -czf schedule.tar.gz schedule/
+          tar -czf logos.tar.gz logos/
+
+      # STEP 4: Transfer compressed files to VPS
+      - name: Copy files to VPS via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          source: "schedule.tar.gz,logos.tar.gz"
+          target: "/tmp/tvtonight_deploy"
+
+      # STEP 5: Uncompress files on the VPS
+      - name: Extract files on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          # Ensure the target directory exists and extract files
+          script: |
+            sudo mkdir -p /data/tv/
+            sudo tar -xzf /tmp/tvtonight_deploy/schedule.tar.gz -C /data/tv/
+            sudo tar -xzf /tmp/tvtonight_deploy/logos.tar.gz -C /data/tv/
+            sudo rm -rf /tmp/tvtonight_deploy
