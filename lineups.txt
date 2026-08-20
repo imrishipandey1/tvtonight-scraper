@@ -1,3 +1,4 @@
 # local-file-name|exact TitanTV lineupName
 directv|DirecTV - National
 dish-national|Dish - National
+broadcast-new-york|Broadcast - New York NY
