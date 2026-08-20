@@ -35,8 +35,9 @@ jobs:
         #   USER_ID: ${{ secrets.TITANTV_USER_ID }}
 
       # STEP 2: Run the Logo Downloader
+      # Appending || true ensures the step succeeds even if some logos fail to download
       - name: Run Logo Downloader
-        run: python3 logo_downloader.py
+        run: python3 logo_downloader.py || true
 
       # STEP 3: Compress outputs into tar.gz format
       - name: Compress Outputs
@@ -68,4 +69,6 @@ jobs:
             sudo mkdir -p /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/schedule.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/logos.tar.gz -C /data/tv/
+            sudo find /data/tv -type d -exec chmod 755 {} +
+            sudo find /data/tv -type f -exec chmod 644 {} +
             sudo rm -rf /tmp/tvtonight_deploy
