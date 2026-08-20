@@ -1,5 +1,5 @@
-CDN_URL = "https://cdn.mysite.com/logos/"
-FALLBACK_LOGO_URL = "https://cdn.example.com/logo.webp"
+CDN_URL = "https://cdn.tvscheduletonight.com/tv/logos/"
+FALLBACK_LOGO_URL = "https://cdn.tvscheduletonight.com/logo.webp"
 
 SCHEDULE_DIR = "schedule"
 LOGO_DIR = "logos"
