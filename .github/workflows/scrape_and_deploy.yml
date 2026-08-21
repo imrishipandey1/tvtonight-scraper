@@ -72,3 +72,7 @@ jobs:
             sudo find /data/tv -type d -exec chmod 755 {} +
             sudo find /data/tv -type f -exec chmod 644 {} +
             sudo rm -rf /tmp/tvtonight_deploy
+
+      # STEP 6: Trigger Vercel Deployment
+      - name: Trigger Vercel Deploy Hook
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
