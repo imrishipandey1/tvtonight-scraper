@@ -27,6 +27,13 @@ jobs:
         run: |
           python3 -m pip install Pillow
 
+      # Download cache.db from VPS
+      - name: Download cache.db from VPS
+        run: |
+          mkdir -p cache
+          sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" scp -o StrictHostKeyChecking=no -P 22 ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/data/tv/cache/logo_cache.db cache/logo_cache.db || echo "No existing cache found"
+
       # STEP 1: Run the Scraper Script
       - name: Run TitanTV Scraper
         run: python3 titantv_scraper.py
@@ -43,7 +50,9 @@ jobs:
       - name: Compress Outputs
         run: |
           tar -czf schedule.tar.gz schedule/
+          mkdir -p logos
           tar -czf logos.tar.gz logos/
+          tar -czf cache.tar.gz cache/
 
       # STEP 4: Transfer compressed files to VPS
       - name: Copy files to VPS via SCP
@@ -53,7 +62,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
-          source: "schedule.tar.gz,logos.tar.gz"
+          source: "schedule.tar.gz,logos.tar.gz,cache.tar.gz"
           target: "/tmp/tvtonight_deploy"
 
       # STEP 5: Uncompress files on the VPS
@@ -69,6 +78,7 @@ jobs:
             sudo mkdir -p /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/schedule.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/logos.tar.gz -C /data/tv/
+            sudo tar -xzf /tmp/tvtonight_deploy/cache.tar.gz -C /data/tv/
             sudo find /data/tv -type d -exec chmod 755 {} +
             sudo find /data/tv -type f -exec chmod 644 {} +
             sudo rm -rf /tmp/tvtonight_deploy
