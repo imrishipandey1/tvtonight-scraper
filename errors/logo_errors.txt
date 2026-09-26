@@ -1,4 +1,0 @@
-schedule
-URL: /Users/rishipandey/Projects/imrishipandey/tvtonight-scraper/schedule
-ERROR: Schedule directory does not exist: /Users/rishipandey/Projects/imrishipandey/tvtonight-scraper/schedule
-

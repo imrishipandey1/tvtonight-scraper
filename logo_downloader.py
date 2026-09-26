@@ -579,6 +579,60 @@ def write_error_file(errors: list[ErrorDetail]) -> None:
             error_file.write(f"ERROR: {error.reason}\n\n")
 
 
+def print_and_record_summary(
+    errors: list[ErrorDetail],
+    downloaded_count: int,
+    cached_count: int,
+    failed_count: int,
+    updated_files: int,
+    updated_references: int,
+) -> None:
+    print("\n" + "=" * 65, flush=True)
+    print("🖼️ TITANTV LOGO DOWNLOADER RUN SUMMARY", flush=True)
+    print("=" * 65, flush=True)
+    print(f"Downloaded new logos  : {downloaded_count}", flush=True)
+    print(f"Skipped (cached)      : {cached_count}", flush=True)
+    print(f"Failed / Fallbacks    : {failed_count}", flush=True)
+    print(f"JSON files updated    : {updated_files} ({updated_references} references)", flush=True)
+
+    if not errors:
+        print("✅ All logos processed successfully with no issues!", flush=True)
+        print("=" * 65 + "\n", flush=True)
+    else:
+        print(f"⚠️ Logo issues / failures: {len(errors)}", flush=True)
+        print("-" * 65, flush=True)
+        for err in errors:
+            print(f"❌ Callsign: '{err.callsign}' | URL: {err.url} -> {err.reason}", flush=True)
+        print("=" * 65 + "\n", flush=True)
+
+    # GitHub Actions Integration (Summary tab and UI warnings)
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        try:
+            with open(summary_path, "a", encoding="utf-8") as f:
+                f.write("### 🖼️ Logo Downloader Report\n\n")
+                f.write(f"- **Downloaded:** {downloaded_count}\n")
+                f.write(f"- **Cached / Skipped:** {cached_count}\n")
+                f.write(f"- **Failed (Fallback Used):** {failed_count}\n")
+                f.write(f"- **Schedule Files Updated:** {updated_files}\n\n")
+                if errors:
+                    f.write("| Callsign | Reason | URL |\n")
+                    f.write("| :--- | :--- | :--- |\n")
+                    for err in errors:
+                        msg = str(err.reason).replace("\n", " ")
+                        f.write(f"| **{err.callsign}** | {msg} | `{err.url}` |\n")
+                    f.write("\n")
+                else:
+                    f.write("✅ **All logos verified/downloaded successfully!**\n\n")
+        except OSError:
+            pass
+
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        for err in errors:
+            msg = str(err.reason).replace("\n", " ")
+            print(f"::warning title=Logo Download Failed ({err.callsign})::{err.url} - {msg}", flush=True)
+
+
 def main() -> int:
     errors: list[ErrorDetail] = []
     print("TitanTV Logo Downloader\n")
@@ -589,7 +643,7 @@ def main() -> int:
     except LogoError as error:
         errors.append(ErrorDetail("schedule", str(SCHEDULE_DIR), str(error)))
         write_error_file(errors)
-        print(f"Error: {error}", file=sys.stderr)
+        print_and_record_summary(errors, 0, 0, 1, 0, 0)
         return 1
 
     show_tasks = build_tasks(shows)
@@ -727,13 +781,14 @@ def main() -> int:
     updated_files, updated_references = update_schedules(replacements, errors)
     write_error_file(errors)
 
-    print("Completed\n")
-    print(f"Downloaded:\n{downloaded_count}\n")
-    print(f"Skipped:\n{cached_count}\n")
-    print(f"Failed:\n{failed_count}\n")
-    print(f"JSON files updated:\n{updated_files}")
-    print(f"Logo references updated:\n{updated_references}\n")
-    print(f"Errors:\n{relative_to_root(ERROR_FILE)}")
+    print_and_record_summary(
+        errors,
+        downloaded_count,
+        cached_count,
+        failed_count,
+        updated_files,
+        updated_references,
+    )
     return 1 if failed_count else 0
 
 

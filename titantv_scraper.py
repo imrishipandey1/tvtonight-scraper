@@ -27,8 +27,8 @@ LINEUPS_FILE = ROOT_DIR / "lineups.txt"
 SCHEDULE_DIR = ROOT_DIR / "schedule"
 ERRORS_FILE = ROOT_DIR / "errors.jsonl"
 
-# Set this once for your TitanTV account. --user-id can override it when needed.
-USER_ID = "dd77a9d6-ad6d-453e-9a94-719f180363da"
+# Set this once for your TitanTV account. USER_ID env or --user-id can override it.
+USER_ID = os.environ.get("USER_ID") or "dd77a9d6-ad6d-453e-9a94-719f180363da"
 DEFAULT_BASE_URL = "https://www.titantv.com"
 DEFAULT_TIMEOUT_SECONDS = 30
 DEFAULT_RETRIES = 3
@@ -416,6 +416,59 @@ def remove_expired_schedule_files(start_date: date, errors: list[dict[str, Any]]
     return removed_files
 
 
+def print_and_record_summary(errors: list[dict[str, Any]], total_channels: int, saved_files: int) -> None:
+    print("\n" + "=" * 65, flush=True)
+    print("📺 TITANTV SCRAPER RUN SUMMARY", flush=True)
+    print("=" * 65, flush=True)
+    print(f"Total matched channels: {total_channels}", flush=True)
+    print(f"Saved schedule files  : {saved_files}", flush=True)
+
+    if not errors:
+        print("✅ All channels scraped successfully with no issues!", flush=True)
+        print("=" * 65 + "\n", flush=True)
+    else:
+        print(f"⚠️ Channel issues / failures: {len(errors)}", flush=True)
+        print("-" * 65, flush=True)
+        for err in errors:
+            stage = err.get("stage", "general")
+            lineup = err.get("lineup") or err.get("file_key") or "N/A"
+            callsign = err.get("callsign") or err.get("file") or "N/A"
+            msg = err.get("message", "Unknown error")
+            print(f"❌ [{stage.upper()}] Lineup: '{lineup}' | Callsign: '{callsign}' -> {msg}", flush=True)
+        print("=" * 65 + "\n", flush=True)
+
+    # GitHub Actions Integration (Summary tab and UI warnings)
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        try:
+            with open(summary_path, "a", encoding="utf-8") as f:
+                f.write("### 📺 TitanTV Schedule Scraper Report\n\n")
+                f.write(f"- **Matched Channels:** {total_channels}\n")
+                f.write(f"- **Schedule Files Saved:** {saved_files}\n")
+                f.write(f"- **Channel Failures / Warnings:** {len(errors)}\n\n")
+                if errors:
+                    f.write("| Stage | Lineup | Callsign | Issue |\n")
+                    f.write("| :--- | :--- | :--- | :--- |\n")
+                    for err in errors:
+                        stage = err.get("stage", "general")
+                        lineup = err.get("lineup") or err.get("file_key") or "-"
+                        callsign = err.get("callsign") or err.get("file") or "-"
+                        msg = str(err.get("message", "Unknown error")).replace("\n", " ")
+                        f.write(f"| {stage} | {lineup} | **{callsign}** | {msg} |\n")
+                    f.write("\n")
+                else:
+                    f.write("✅ **All channels scraped successfully!**\n\n")
+        except OSError:
+            pass
+
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        for err in errors:
+            lineup = err.get("lineup") or err.get("file_key") or "Lineup"
+            callsign = err.get("callsign") or "Channel"
+            msg = str(err.get("message", "Error")).replace("\n", " ")
+            print(f"::warning title=Channel Scrape Failed ({lineup} / {callsign})::{msg}", flush=True)
+
+
 def main() -> int:
     args = parse_args()
     errors: list[dict[str, Any]] = []
@@ -562,14 +615,15 @@ def main() -> int:
             print(f"Removed {removed_files} expired schedule files.", flush=True)
 
         append_errors(errors)
-        print(f"Finished: {saved_files} JSON files for {len(jobs)} matched channels.")
-        if errors:
-            print(f"Warnings/errors: {len(errors)} written to {ERRORS_FILE.name}.", file=sys.stderr)
+        matched_count = len(jobs) if "jobs" in locals() else 0
+        print_and_record_summary(errors, matched_count, saved_files)
         return 0
     except (ScraperError, OSError) as error:
         errors.append(error_record("setup", str(error)))
         append_errors(errors)
-        print(f"Error: {error}. Details saved to {ERRORS_FILE.name}.", file=sys.stderr)
+        matched_count = len(jobs) if "jobs" in locals() else 0
+        saved_count = saved_files if "saved_files" in locals() else 0
+        print_and_record_summary(errors, matched_count, saved_count)
         return 1
 
 

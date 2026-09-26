@@ -79,6 +79,11 @@ jobs:
             sudo tar -xzf /tmp/tvtonight_deploy/schedule.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/logos.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/cache.tar.gz -C /data/tv/
+            # Delete schedule JSON files older than 7 days and clean empty directories
+            if [ -d "/data/tv/schedule" ]; then
+              sudo find /data/tv/schedule -type f -name "*.json" -mtime +7 -delete
+              sudo find /data/tv/schedule -mindepth 1 -type d -empty -delete
+            fi
             sudo find /data/tv -type d -exec chmod 755 {} +
             sudo find /data/tv -type f -exec chmod 644 {} +
             sudo rm -rf /tmp/tvtonight_deploy
