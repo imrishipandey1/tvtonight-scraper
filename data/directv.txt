@@ -77,7 +77,6 @@ OVATN
 NGC-E
 TVGC
 TRAVEL
-TDC-E
 SCICH
 ID
 Destination
