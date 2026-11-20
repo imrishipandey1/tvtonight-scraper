@@ -1,13 +1,8 @@
 name: Scrape and Deploy
 
 on:
-  # Schedule: 12:30 AM Eastern Time (USA)
-  # Eastern Standard Time (EST) is UTC-5, so 12:30 AM EST = 5:30 AM UTC.
-  # Note: During Daylight Saving Time (EDT, UTC-4), this runs at 1:30 AM EDT.
   schedule:
     - cron: '30 5 * * *'
-  
-  # Manual trigger option
   workflow_dispatch:
 
 jobs:
@@ -27,22 +22,23 @@ jobs:
         run: |
           python3 -m pip install Pillow
 
-      # Download cache.db from VPS
+      # Set up SSH Key for native commands (like scp)
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Download cache.db from VPS using the SSH key
       - name: Download cache.db from VPS
         run: |
           mkdir -p cache
-          sudo apt-get install -y sshpass
-          sshpass -p "${{ secrets.VPS_PASSWORD }}" scp -o StrictHostKeyChecking=no -P 22 ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/data/tv/cache/logo_cache.db cache/logo_cache.db || echo "No existing cache found"
+          scp -o StrictHostKeyChecking=no -P 22 ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/data/tv/cache/logo_cache.db cache/logo_cache.db || echo "No existing cache found"
 
       # STEP 1: Run the Scraper Script
       - name: Run TitanTV Scraper
         run: python3 titantv_scraper.py
-        # If you need to hide your USER_ID, you can use GitHub Secrets:
-        # env:
-        #   USER_ID: ${{ secrets.TITANTV_USER_ID }}
 
       # STEP 2: Run the Logo Downloader
-      # Appending || true ensures the step succeeds even if some logos fail to download
       - name: Run Logo Downloader
         run: python3 logo_downloader.py || true
 
@@ -54,32 +50,30 @@ jobs:
           tar -czf logos.tar.gz logos/
           tar -czf cache.tar.gz cache/
 
-      # STEP 4: Transfer compressed files to VPS
+      # STEP 4: Transfer compressed files to VPS using the SSH key
       - name: Copy files to VPS via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "schedule.tar.gz,logos.tar.gz,cache.tar.gz"
           target: "/tmp/tvtonight_deploy"
 
-      # STEP 5: Uncompress files on the VPS
+      # STEP 5: Uncompress files on the VPS using the SSH key
       - name: Extract files on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # Ensure the target directory exists and extract files
           script: |
             sudo mkdir -p /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/schedule.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/logos.tar.gz -C /data/tv/
             sudo tar -xzf /tmp/tvtonight_deploy/cache.tar.gz -C /data/tv/
-            # Delete schedule JSON files older than 7 days and clean empty directories
             if [ -d "/data/tv/schedule" ]; then
               sudo find /data/tv/schedule -type f -name "*.json" -mtime +7 -delete
               sudo find /data/tv/schedule -mindepth 1 -type d -empty -delete
